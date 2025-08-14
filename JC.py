@@ -36,8 +36,7 @@ def build_prompt(caption_type: str, caption_length: str | int, extra_options: li
     )
 
 class JC_Models:
-    def __init__(self, model: str, memory_mode: str):
-        checkpoint_path = Path(folder_paths.models_dir) / "LLM" / Path(model).stem
+    def __init__(self, model: str, memory_mode: str,checkpoint_path: str=Path(folder_paths.models_dir) / "LLM" / Path(model).stem):
         if not checkpoint_path.exists():
             from huggingface_hub import snapshot_download
             snapshot_download(repo_id=model, local_dir=str(checkpoint_path), force_download=False, local_files_only=False)
@@ -259,7 +258,7 @@ class JC_adv:
         self.current_memory_mode = None
         self.current_model = None
     
-    def generate(self, image, model, quantization, prompt_style, caption_length, max_new_tokens, temperature, top_p, top_k, custom_prompt, memory_management, extra_options=None):
+    def generate(self, image, model, quantization, prompt_style, caption_length, max_new_tokens, temperature, top_p, top_k, custom_prompt, memory_management, extra_options=None,checkpoint_path:str=None):
         try:
             if self.predictor is None or self.current_memory_mode != quantization or self.current_model != model:
                 if self.predictor is not None:
@@ -269,7 +268,7 @@ class JC_adv:
                 
                 try:
                     model_name = HF_MODELS[model]["name"]
-                    self.predictor = JC_Models(model_name, quantization)
+                    self.predictor = JC_Models(model_name, quantization,checkpoint_path=checkpoint_path)
                     self.current_memory_mode = quantization
                     self.current_model = model
                 except Exception as e:
