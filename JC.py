@@ -1,11 +1,9 @@
 import torch
 from transformers import AutoProcessor, LlavaForConditionalGeneration, BitsAndBytesConfig
-import folder_paths
 from pathlib import Path
 from PIL import Image
 from torchvision.transforms import ToPILImage
 import json
-
 # Load configuration from JSON file
 with open(Path(__file__).parent / "jc_data.json", "r", encoding="utf-8") as f:
     config = json.load(f)
@@ -36,7 +34,7 @@ def build_prompt(caption_type: str, caption_length: str | int, extra_options: li
     )
 
 class JC_Models:
-    def __init__(self, model: str, memory_mode: str,checkpoint_path: str=Path(folder_paths.models_dir) / "LLM" / Path(model).stem):
+    def __init__(self, model: str, memory_mode: str,checkpoint_path: str="root/":
         if not checkpoint_path.exists():
             from huggingface_hub import snapshot_download
             snapshot_download(repo_id=model, local_dir=str(checkpoint_path), force_download=False, local_files_only=False)
