@@ -34,7 +34,7 @@ def build_prompt(caption_type: str, caption_length: str | int, extra_options: li
     )
 
 class JC_Models:
-    def __init__(self, model: str, memory_mode: str,checkpoint_path: str="root/":
+    def __init__(self, model: str, memory_mode: str,checkpoint_path: str="root/"):
         if not checkpoint_path.exists():
             from huggingface_hub import snapshot_download
             snapshot_download(repo_id=model, local_dir=str(checkpoint_path), force_download=False, local_files_only=False)
